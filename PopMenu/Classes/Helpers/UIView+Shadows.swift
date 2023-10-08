@@ -20,3 +20,15 @@ extension UIView {
     }
     
 }
+
+extension UIApplication {
+    
+    var popKeyWindiw: UIWindow? {
+        guard #available(iOS 13, *) else {
+            return self.keyWindow
+        }
+        return UIApplication.shared.connectedScenes
+            .flatMap { ($0 as? UIWindowScene)?.windows ?? [] }
+            .first { $0.isKeyWindow }
+    }
+}

@@ -9,7 +9,7 @@
 import UIKit
 
 /// Delegate for handling PopMenu selection.
-@objc public protocol PopMenuViewControllerDelegate: class {
+@objc public protocol PopMenuViewControllerDelegate: AnyObject {
     /// Called when an action is selected.
     @objc optional func popMenuDidSelectItem(_ popMenuViewController: PopMenuViewController, at index: Int)
 }
@@ -400,7 +400,7 @@ extension PopMenuViewController {
         let origin = CGPoint(x: desiredOrigin.x, y: desiredOrigin.y + contentSize.height)
 
         if #available(iOS 11.0, *) {
-            edgePadding = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 8
+            edgePadding = UIApplication.shared.popKeyWindiw?.safeAreaInsets.bottom ?? 8
         } else {
             edgePadding = 8
         }
@@ -548,7 +548,7 @@ extension PopMenuViewController {
     
     /// When the menu action gets tapped.
     @objc fileprivate func menuDidTap(_ gesture: UITapGestureRecognizer) {
-        guard let attachedView = gesture.view, let index = actions.index(where: { $0.view.isEqual(attachedView) }) else { return }
+        guard let attachedView = gesture.view, let index = actions.firstIndex(where: { $0.view.isEqual(attachedView) }) else { return }
 
         actionDidSelect(at: index)
     }
@@ -601,7 +601,7 @@ extension PopMenuViewController {
         let touchLocation = gesture.location(in: actionsView)
         // Get associated index for touch location.
         if let touchedView = actionsView.arrangedSubviews.filter({ return $0.frame.contains(touchLocation) }).first,
-            let index = actionsView.arrangedSubviews.index(of: touchedView){
+            let index = actionsView.arrangedSubviews.firstIndex(of: touchedView){
             return index
         }
         
